@@ -25,7 +25,7 @@
 - => fall back to repo-audit self-found gap for this run.
 
 ## Gap ledger (dedupe — READ FIRST, never re-pick)
-- (none yet for this repo)
+- 2026-09-05 self-found gap (`dot-gov.js` "State" filter over-matched "Interstate"/"Independent Intrastate" via unanchored `/State/i` in `filterByType`) — pr-opened (fork PR #1) — fixed by anchoring the State type match (`^State$`); added tests covering all entity-type filters + regression test for state. Lesson: the untested `narrowResultsByEntity` branches hid a real substring-match bug exposed by adding coverage.
 
 ## Mined gaps (discovered, not yet attempted)
-- 2026-09-05 tests/ci `dot-gov.js` `narrowResultsByEntity` entity-filter branches (County, Judicial, Legislative, Federal combined, Independent Intrastate, Interstate, Tribal) are uncovered; existing dot-gov.test.js only covers City and Executive/Executive-branch filters. Proposed: extend the existing "filters correctly by entity" describe with per-type cases using the existing mockCache. Dedupe: no upstream issue/PR covers this. — status: proposed
+- 2026-09-05 tests/ci `dot-gov.js` `narrowResultsByEntity` entity-filter branches (County, Judicial, Legislative, Federal combined, Independent Intrastate, Interstate, Tribal) are uncovered; existing dot-gov.test.js only covers City and Executive/Executive-branch filters. Extended the existing "filters correctly by entity" describe. During testing the State case exposed a real over-match bug (substring `State` matched Interstate/Intrastate) -> fixed + regression test. Dedupe: no upstream issue/PR covers this. — status: attempted (pr-opened, 2026-09-05)
