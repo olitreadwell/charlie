@@ -150,7 +150,10 @@ const narrowResultsByEntity = (entity, data) => {
     return filterByType(DOMAIN_TYPES.INTERSTATE);
   }
   if (/State/i.test(entity)) {
-    return filterByType(DOMAIN_TYPES.STATE);
+    // Match the exact "State" domain type. An unanchored match would also
+    // include "Interstate" and "Independent Intrastate" domains, which are
+    // separate government types in the CISA dataset.
+    return filterByType(`^${DOMAIN_TYPES.STATE}$`);
   }
   if (/Trib(e|(al))/i.test(entity)) {
     return filterByType(DOMAIN_TYPES.TRIBAL);

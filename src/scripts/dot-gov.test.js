@@ -363,6 +363,99 @@ describe("dot-gov domains", () => {
           expect.stringMatching(/RURAL.GOV/),
         ]);
       });
+      it("if entity is a county with no matching domains", async () => {
+        cache.mockResolvedValue(mockCache);
+        message.context = {
+          matches: { groups: { re_type: "county" } },
+        };
+        await handler(message);
+
+        expect(message.say).not.toHaveBeenCalled();
+      });
+      it("if entity is judicial", async () => {
+        cache.mockResolvedValue(mockCache);
+        message.context = {
+          matches: { groups: { re_type: "judicial" } },
+        };
+        await handler(message);
+
+        expect(message.say.mock.calls[0][0].text.split("\n")).toEqual([
+          "There are 1 `.gov` judicial domains right now! Have you seen this one?",
+          expect.stringMatching(/SUPREMECOURTUS.GOV/),
+        ]);
+      });
+      it("if entity is legislative", async () => {
+        cache.mockResolvedValue(mockCache);
+        message.context = {
+          matches: { groups: { re_type: "legislative" } },
+        };
+        await handler(message);
+
+        expect(message.say.mock.calls[0][0].text.split("\n")).toEqual([
+          "There are 1 `.gov` legislative domains right now! Have you seen this one?",
+          expect.stringMatching(/USCODE.GOV/),
+        ]);
+      });
+      it("if entity is federal, returning executive, judicial, and legislative domains", async () => {
+        cache.mockResolvedValue(mockCache);
+        message.context = {
+          matches: { groups: { re_type: "federal" } },
+        };
+        await handler(message);
+
+        expect(message.say.mock.calls[0][0].text.split("\n")).toEqual([
+          "There are 3 `.gov` federal domains right now! Have you seen this one?",
+          expect.stringMatching(/RURAL\.GOV|SUPREMECOURTUS\.GOV|USCODE\.GOV/),
+        ]);
+      });
+      it("if entity is an independent intrastate", async () => {
+        cache.mockResolvedValue(mockCache);
+        message.context = {
+          matches: { groups: { re_type: "independent intrastate" } },
+        };
+        await handler(message);
+
+        expect(message.say.mock.calls[0][0].text.split("\n")).toEqual([
+          "There are 1 `.gov` independent intrastate domains right now! Have you seen this one?",
+          expect.stringMatching(/ACSD-AZ.GOV/),
+        ]);
+      });
+      it("if entity is an interstate", async () => {
+        cache.mockResolvedValue(mockCache);
+        message.context = {
+          matches: { groups: { re_type: "interstate" } },
+        };
+        await handler(message);
+
+        expect(message.say.mock.calls[0][0].text.split("\n")).toEqual([
+          "There are 1 `.gov` interstate domains right now! Have you seen this one?",
+          expect.stringMatching(/EMSCOMPACT.GOV/),
+        ]);
+      });
+      it("if entity is a state, excluding interstate and intrastate domains", async () => {
+        cache.mockResolvedValue(mockCache);
+        message.context = {
+          matches: { groups: { re_type: "state" } },
+        };
+        await handler(message);
+
+        expect(message.say.mock.calls[0][0].text.split("\n")).toEqual([
+          "There are 1 `.gov` state domains right now! Have you seen this one?",
+          expect.stringMatching(/VIVOTE.GOV/),
+        ]);
+      });
+      it("if entity is tribal", async () => {
+        cache.mockResolvedValue(mockCache);
+        message.context = {
+          matches: { groups: { re_type: "tribal" } },
+        };
+        await handler(message);
+
+        expect(message.say.mock.calls[0][0].text.split("\n")).toEqual([
+          "There are 1 `.gov` tribal domains right now! Have you seen this one?",
+          expect.stringMatching(/CHICKASAW-NSN.GOV/),
+        ]);
+      });
     });
   });
 });
